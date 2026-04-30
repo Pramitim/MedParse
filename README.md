@@ -1,10 +1,7 @@
-MEDPARSE
-
-Python based AI Powered backend system that processes a .txt file of clinical notes and stores structured data into relational database.
+MEDPARSE: Python based AI Powered backend system that processes a .txt file of clinical notes and stores structured data into relational database.
 
 
-PIPLINE: 
-raw medical note -> data extraction using GEMINI LLM -> store in SQLite Database 
+Pipline: raw medical note -> data extraction using GEMINI LLM -> store in SQLite Database 
 
 ------------------------------------------------------------------------------------------------
 
