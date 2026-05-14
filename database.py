@@ -5,6 +5,7 @@ engine = create_engine("sqlite:///med_parse.db")
 
 def init_db():
     with engine.connect() as conn:
+
         conn.execute(text("""
         CREATE TABLE IF NOT EXISTS patients (
             patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +21,8 @@ def init_db():
             patient_id INTEGER,
             symptom TEXT,
             medication TEXT,
-            dosage TEXT
+            dosage TEXT,
+            data_quality_score INTEGER
         )
         """))
 
@@ -40,7 +42,10 @@ def insert_record(record: dict):
             patient_id = patient[0]
         else:
             res = conn.execute(
-                text("INSERT INTO patients (name, age, gender) VALUES (:name, :age, :gender)"),
+                text("""
+                INSERT INTO patients (name, age, gender)
+                VALUES (:name, :age, :gender)
+                """),
                 {
                     "name": record["name"],
                     "age": record["age"],
@@ -50,17 +55,30 @@ def insert_record(record: dict):
             conn.commit()
             patient_id = res.lastrowid
 
-        # insert visit
+        # insert visit WITH quality score
         conn.execute(
             text("""
-            INSERT INTO visits (patient_id, symptom, medication, dosage)
-            VALUES (:patient_id, :symptom, :medication, :dosage)
+            INSERT INTO visits (
+                patient_id,
+                symptom,
+                medication,
+                dosage,
+                data_quality_score
+            )
+            VALUES (
+                :patient_id,
+                :symptom,
+                :medication,
+                :dosage,
+                :data_quality_score
+            )
             """),
             {
                 "patient_id": patient_id,
                 "symptom": record["symptom"],
                 "medication": record["medication"],
-                "dosage": record["dosage"]
+                "dosage": record["dosage"],
+                "data_quality_score": record.get("data_quality_score", 0)
             }
         )
 

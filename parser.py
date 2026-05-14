@@ -62,4 +62,25 @@ Note:
     return {"error": "no_json_found", "raw": text}
 
     
+def compute_quality_score(data: dict) -> int:
+    score = 0
 
+    required_fields = ["name", "age", "gender", "symptom", "medication", "dosage"]
+
+    # 1. completeness (60 points total)
+    filled = sum(1 for f in required_fields if data.get(f))
+    score += (filled / len(required_fields)) * 60
+
+    # 2. age validity (10 points)
+    if isinstance(data.get("age"), int) and 0 < data["age"] < 120:
+        score += 10
+
+    # 3. medication + dosage consistency (20 points)
+    if data.get("medication") and data.get("dosage"):
+        score += 20
+
+    # 4. symptom present (10 points)
+    if data.get("symptom"):
+        score += 10
+
+    return int(score)
