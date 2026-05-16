@@ -63,7 +63,7 @@ Relationship between 2 tables:
 - One patient can have multiple visits
 - visits.patient_id links to patients.patient_id
 
-## things to add later on (not yet)
+## Future updates
 
 - logging
 - authentication
