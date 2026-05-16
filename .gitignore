@@ -6,3 +6,5 @@ __pycache__/
 *.sqlite
 *.sqlite3
 .DS_Store
+frontend/node_modules/
+frontend/dist/

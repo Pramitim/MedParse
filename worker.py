@@ -1,5 +1,5 @@
 from redis import Redis
-from rq import Worker, Queue, Connection
+from rq import Worker, Queue
 from parser import parse_note
 from database import insert_record
 
@@ -29,12 +29,9 @@ def process_note(note: str):
 # create worker
 if __name__ == "__main__":
 
-    with Connection(redis_conn):
+    queue = Queue("medical_notes", connection=redis_conn)
+    worker = Worker([queue], connection=redis_conn)
 
-        worker = Worker(
-            [Queue("medical_notes")]
-        )
+    print("Worker started...")
 
-        print("Worker started...")
-
-        worker.work()
+    worker.work()

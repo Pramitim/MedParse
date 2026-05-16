@@ -26,6 +26,11 @@ def init_db():
         )
         """))
 
+        # add column if db was created before data_quality_score was introduced
+        existing = [row[1] for row in conn.execute(text("PRAGMA table_info(visits)")).fetchall()]
+        if "data_quality_score" not in existing:
+            conn.execute(text("ALTER TABLE visits ADD COLUMN data_quality_score INTEGER"))
+
         conn.commit()
 
 
